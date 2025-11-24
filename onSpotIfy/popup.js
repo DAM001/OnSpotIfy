@@ -7,8 +7,8 @@ function send(cmd, value) {
 
         chrome.tabs.sendMessage(tabs[0].id, {
             source: "spotify-ext",
-            cmd: cmd,
-            value: value
+            cmd,
+            value
         });
     });
 }
@@ -18,42 +18,47 @@ document.getElementById("prev").onclick = () => send("prev", null);
 document.getElementById("next").onclick = () => send("next", null);
 
 document.getElementById("playPause").onclick = () => {
+    // Just send the command; icon will be updated from real state
     send("toggle", null);
-
-    // Do NOT toggle icon here; real state will come from content.js
 };
 
 /* VOLUME */
 const volumeSlider = document.getElementById("volumeRange");
 
-volumeSlider.onmousedown = () => volumeSlider.dragging = true;
-volumeSlider.onmouseup = () => volumeSlider.dragging = false;
-
-volumeSlider.oninput = (e) => {
-    send("volume", Number(e.target.value));
+// Track if user is actively dragging to avoid fighting with updates
+volumeSlider.onmousedown = () => {
+    volumeSlider.dragging = true;
+};
+volumeSlider.onmouseup = () => {
+    volumeSlider.dragging = false;
 };
 
-/* --- STATE SYNC --- */
+volumeSlider.oninput = (e) => {
+    const v = Number(e.target.value);
+    send("volume", v);
+};
 
-// Request current Spotify state when popup opens
+/* INITIAL STATE REQUEST */
 chrome.tabs.query({ url: "https://open.spotify.com/*" }, (tabs) => {
     if (tabs.length) {
         chrome.tabs.sendMessage(tabs[0].id, "spotify-ext-request-state");
     }
 });
 
-// Receive updates from content.js
+/* RECEIVE STATE UPDATES FROM CONTENT SCRIPT */
 chrome.runtime.onMessage.addListener((msg) => {
-    if (msg.source !== "spotify-ext-update") return;
+    if (!msg || msg.source !== "spotify-ext-update") return;
 
-    const { isPlaying, volume } = msg.state;
+    const { isPlaying, volume } = msg.state || {};
 
-    // Update play/pause icon from REAL Spotify state
+    // Update play/pause icon from actual state
     const icon = document.getElementById("playPauseIcon");
-    icon.src = isPlaying ? "assets/pause.png" : "assets/play.png";
+    if (icon) {
+        icon.src = isPlaying ? "assets/pause.png" : "assets/play.png";
+    }
 
-    // Update slider if user is not actively dragging it
-    if (!volumeSlider.dragging) {
+    // Update volume slider if user is not dragging it
+    if (!volumeSlider.dragging && typeof volume === "number") {
         volumeSlider.value = volume;
     }
 });
