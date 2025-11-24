@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Spotify Controller",
+    "name": "OnSpotIfy",
     "version": "1.0",
     "description": "Simple Spotify Web Player controller",
     "permissions": [
