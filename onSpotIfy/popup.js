@@ -1,7 +1,8 @@
 function send(cmd, value) {
     chrome.tabs.query({ url: "https://open.spotify.com/*" }, (tabs) => {
         if (!tabs.length) {
-            alert("No Spotify tab found! Please open https://open.spotify.com");
+            // If no Spotify tab, open it instead of alerting
+            chrome.tabs.create({ url: "https://open.spotify.com" });
             return;
         }
 
