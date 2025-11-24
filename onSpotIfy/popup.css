@@ -1,0 +1,85 @@
+:root {
+    --green: #1db954;
+    --bg: #121212;
+    --white: #fff;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 130px;
+    background: var(--bg);
+    font-family: sans-serif;
+    color: var(--white);
+}
+
+/* CONTROLS ROW */
+#controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+/* BUTTONS */
+.btn {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.btn:hover .icon {
+    filter: brightness(1.5);
+}
+
+.play {
+    background: var(--green);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* VOLUME ROW */
+#volume {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px;
+    width: calc(100% - 16px);
+}
+
+.vol-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.85;
+}
+
+/* SLIDER */
+input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    background: #333;
+    border-radius: 3px;
+    width: calc(100% - 16px);
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--green);
+    cursor: pointer;
+}
