@@ -6,6 +6,29 @@
 </head>
 
 <body>
+    <div id="message" style="display: none; padding: 8px; text-align: center; font-size: 10px; color: #1db954; background: #1a1a1a; margin: 4px; border-radius: 4px;"></div>
+
+    <!-- Cover Art and Track Info -->
+    <div id="nowPlaying">
+        <img id="coverArt" src="" alt="Cover Art" style="display: none;">
+        <div id="trackInfo">
+            <div id="trackTitle">No track playing</div>
+            <div id="trackArtist"></div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div id="progressContainer">
+        <div id="progressBarBg">
+            <div id="progressBar"></div>
+        </div>
+        <div id="timeDisplay">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+        </div>
+    </div>
+
+    <!-- Controls -->
     <div id="controls">
         <button id="prev" class="btn">
             <img src="assets/prev.png" class="icon" />
@@ -20,6 +43,7 @@
         </button>
     </div>
 
+    <!-- Volume -->
     <div id="volume">
         <img src="assets/volume.png" class="vol-icon">
         <input id="volumeRange" type="range" min="0" max="1" step="0.05" value="1">
