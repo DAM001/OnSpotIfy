@@ -54,8 +54,13 @@ volumeSlider.onmouseup = () => {
 
 volumeSlider.oninput = (e) => {
     const v = Number(e.target.value);
+    // Update CSS variable for progress fill
+    volumeSlider.style.setProperty('--volume-progress', (v * 100) + '%');
     send("volume", v);
 };
+
+// Initialize volume progress on load
+volumeSlider.style.setProperty('--volume-progress', (volumeSlider.value * 100) + '%');
 
 /* INITIAL STATE REQUEST */
 chrome.tabs.query({ url: "https://open.spotify.com/*" }, (tabs) => {
@@ -76,6 +81,26 @@ if (progressBarBg) {
     progressBarBg.style.cursor = "pointer";
 }
 
+/* NOW PLAYING CLICK TO OPEN SPOTIFY */
+const nowPlaying = document.getElementById("nowPlaying");
+if (nowPlaying) {
+    nowPlaying.onclick = () => {
+        chrome.tabs.query({ url: "https://open.spotify.com/*" }, (tabs) => {
+            if (tabs.length) {
+                chrome.tabs.update(tabs[0].id, { active: true });
+            } else {
+                chrome.tabs.create({ url: "https://open.spotify.com" });
+            }
+        });
+    };
+    nowPlaying.style.cursor = "pointer";
+}
+
+const coverArt = document.getElementById("coverArt");
+if (coverArt) {
+    coverArt.style.cursor = "pointer";
+}
+
 /* RECEIVE STATE UPDATES FROM CONTENT SCRIPT */
 chrome.runtime.onMessage.addListener((msg) => {
     if (!msg || msg.source !== "spotify-ext-update") return;
@@ -91,6 +116,8 @@ chrome.runtime.onMessage.addListener((msg) => {
     // Update volume slider if user is not dragging it
     if (!volumeSlider.dragging && typeof volume === "number") {
         volumeSlider.value = volume;
+        // Update CSS variable for progress fill
+        volumeSlider.style.setProperty('--volume-progress', (volume * 100) + '%');
     }
 
     // Update cover art
